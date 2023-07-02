@@ -36,3 +36,13 @@
     transform: rotate(360deg);
   }
 }
+
+
+@font-face {
+  font-family: 'ChulapaFont';
+  src: url('../public/fonts/chulapa.otf') format('opentype');
+}
+
+body {
+  font-family: 'ChulapaFont', sans-serif;
+}

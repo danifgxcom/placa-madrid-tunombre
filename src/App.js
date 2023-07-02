@@ -1,25 +1,27 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import Preview from './components/Preview';
+import DownloadButton from './components/DownloadButton';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [streetName, setStreetName] = useState('');
+
+  const handleStreetNameChange = (event) => {
+    setStreetName(event.target.value);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Generador de placas de calles</h1>
+      <label>
+        Nombre de la calle:
+        <input type="text" value={streetName} onChange={handleStreetNameChange} />
+      </label>
+      <br />
+      <Preview streetName={streetName} shield="/images/escudo.jpg" />
+      <DownloadButton previewId="preview" />
     </div>
   );
-}
+};
 
 export default App;

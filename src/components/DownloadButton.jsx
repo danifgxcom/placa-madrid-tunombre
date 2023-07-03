@@ -1,32 +1,20 @@
 import React from 'react';
+import html2canvas from 'html2canvas';
 
 const DownloadButton = ({ previewId }) => {
   const handleDownload = () => {
+    console.log('probando');
     const previewElement = document.getElementById(previewId);
+    console.log(previewElement);
 
     if (previewElement) {
-      const canvas = document.createElement('canvas');
-      const context = canvas.getContext('2d');
-
-      // Establecer el tamaño del lienzo
-      canvas.width = previewElement.offsetWidth;
-      canvas.height = previewElement.offsetHeight;
-
-      // Dibujar el contenido del elemento de vista previa en el lienzo
-      context.drawImage(previewElement, 0, 0);
-
-      // Generar un blob de la imagen
-      canvas.toBlob((blob) => {
-        // Crear un enlace para descargar el archivo
+      html2canvas(previewElement).then((canvas) => {
+        const imageUrl = canvas.toDataURL('image/png');
         const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
+
+        link.href = imageUrl;
         link.download = 'preview.png';
-
-        // Simular el clic en el enlace de descarga
         link.click();
-
-        // Liberar el objeto URL
-        URL.revokeObjectURL(link.href);
       });
     }
   };

@@ -11,15 +11,20 @@ const App = () => {
   };
 
   return (
-    <div>
+    <div className="app-container">
       <h1>Generador de placas de calles</h1>
-      <label>
-        Nombre de la calle:
-        <input type="text" value={streetName} onChange={handleStreetNameChange} />
-      </label>
-      <br />
-      <Preview streetName={streetName} shield="/images/escudo.jpg" />
-      <DownloadButton previewId="preview" />
+      <div className="form-container">
+        <label className="label">
+          Nombre de la calle:
+          <input className="input" type="text" value={streetName} onChange={handleStreetNameChange} />
+        </label>
+      </div>
+      <div className="preview-container">
+        <Preview streetName={streetName} shield="/images/escudo.jpg" previewId="preview"/>
+      </div>
+      <div className="download-container">
+        <DownloadButton previewId="preview" />
+      </div>
     </div>
   );
 };

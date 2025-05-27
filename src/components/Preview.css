@@ -1,0 +1,333 @@
+/* Base styles for all street signs */
+.street-sign {
+  display: inline-block;
+  margin: 0 auto;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.sign-content {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.sign-shield {
+  width: 50px;
+  height: auto;
+  margin-right: 15px;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+  transition: transform 0.3s ease;
+  object-fit: contain; /* Ensure the image maintains its aspect ratio */
+}
+
+.sign-shield:hover {
+  transform: scale(1.05);
+}
+
+.sign-text {
+  padding: 5px 0;
+  max-width: 400px;
+  word-wrap: break-word;
+}
+
+.text-line {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lines-1 .text-line {
+  white-space: nowrap;
+}
+
+.lines-2 .text-line, .lines-3 .text-line {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.lines-2 .text-line {
+  -webkit-line-clamp: 2;
+  max-height: calc(1.3em * 2); /* line-height * number of lines */
+}
+
+.lines-3 .text-line {
+  -webkit-line-clamp: 3;
+  max-height: calc(1.2em * 3); /* line-height * number of lines */
+}
+
+/* Madrid style */
+.sign-content.madrid {
+  background-color: #003399; /* Madrid blue background */
+  color: white;
+  border: 2px solid white;
+  border-radius: 0; /* Madrid signs are rectangular */
+  box-shadow: 0 0 0 1px #003399, 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.sign-content.madrid::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 50%);
+  pointer-events: none;
+}
+
+.sign-text.madrid {
+  font-family: 'ChulapaFont', Arial, sans-serif;
+  font-size: 2.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: none; /* No text shadow on Madrid signs */
+}
+
+/* London style */
+.london-sign {
+  width: 400px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid black;
+  padding: 20px;
+  font-family: 'Gill Sans', sans-serif;
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+}
+
+.street-name {
+  display: flex;
+  justify-content: space-between;
+  font-size: 32px;
+  font-weight: bold;
+  color: black;
+}
+
+.postcode {
+  color: #a00;
+}
+
+.district {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #a00;
+  border-top: 2px solid black;
+  padding-top: 8px;
+  text-transform: uppercase;
+}
+
+/* Paris style */
+.sign-content.paris {
+  background-color: #0046a6; /* Paris blue background */
+  color: white;
+  border: 3px solid white;
+  border-radius: 0; /* Paris signs are rectangular */
+  box-shadow: 0 0 0 1px #0046a6, 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.sign-text.paris {
+  font-family: 'Arial', sans-serif;
+  font-size: 2.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Barcelona style */
+.sign-content.barcelona {
+  background-color: #00529b; /* Barcelona blue background */
+  color: white;
+  border: 2px solid white;
+  border-radius: 0; /* Barcelona signs are rectangular */
+  box-shadow: 0 0 0 1px #00529b, 0 0 10px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.sign-text.barcelona {
+  font-family: 'Arial', sans-serif;
+  font-size: 2.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Rome style */
+.sign-content.rome {
+  background-color: #003399; /* Rome blue background */
+  color: white;
+  border: 2px solid white;
+  border-radius: 0; /* Rome signs are rectangular */
+  box-shadow: 0 0 0 1px #003399, 0 0 10px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.sign-content.rome::before {
+  content: 'S.P.Q.R.';
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  opacity: 0.8;
+}
+
+.sign-text.rome {
+  font-family: 'Times New Roman', serif;
+  font-size: 2.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Dublin style */
+.sign-content.dublin {
+  background-color: #169b62; /* Dublin green background */
+  color: white;
+  border: 2px solid white;
+  border-radius: 0; /* Dublin signs are rectangular */
+  box-shadow: 0 0 0 1px #169b62, 0 0 10px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.sign-content.dublin::after {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+  font-size: 0.8rem;
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.sign-text.dublin {
+  font-family: 'Arial', sans-serif;
+  font-size: 2.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Berlin style */
+.sign-content.berlin {
+  background-color: #0076c0; /* Berlin blue background */
+  color: white;
+  border: 2px solid white;
+  border-radius: 0; /* Berlin signs are rectangular */
+  box-shadow: 0 0 0 1px #0076c0, 0 0 10px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.sign-content.berlin::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 50%);
+  pointer-events: none;
+}
+
+.sign-text.berlin {
+  font-family: 'Arial', sans-serif;
+  font-size: 2.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Stockholm style */
+.sign-content.stockholm {
+  background-color: #006aa7; /* Stockholm blue background (Swedish blue) */
+  color: white;
+  border: 3px solid #ffcc00; /* Swedish yellow */
+  border-radius: 0; /* Stockholm signs are rectangular */
+  box-shadow: 0 0 0 1px #006aa7, 0 0 10px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.sign-content.stockholm::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 50%);
+  pointer-events: none;
+}
+
+.sign-text.stockholm {
+  font-family: 'Arial', sans-serif;
+  font-size: 2.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Lisbon style */
+.sign-content.lisbon {
+  background-color: #0c2577; /* Lisbon blue background */
+  color: white;
+  border: 2px solid white;
+  border-radius: 0; /* Lisbon signs are rectangular */
+  box-shadow: 0 0 0 1px #0c2577, 0 0 10px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.sign-content.lisbon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 50%);
+  pointer-events: none;
+}
+
+.sign-text.lisbon {
+  font-family: 'Arial', sans-serif;
+  font-size: 2.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Multi-line text adjustments */
+.sign-text.lines-2 {
+  font-size: 1.8rem;
+  line-height: 1.3;
+}
+
+.sign-text.lines-3 {
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .sign-content {
+    padding: 10px 15px;
+  }
+
+  .sign-shield {
+    width: 40px;
+  }
+
+  .sign-text {
+    font-size: 1.8rem;
+  }
+
+  .sign-text.lines-2 {
+    font-size: 1.5rem;
+  }
+
+  .sign-text.lines-3 {
+    font-size: 1.2rem;
+  }
+}

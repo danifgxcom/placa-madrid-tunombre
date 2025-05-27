@@ -1,33 +1,51 @@
 import React from 'react';
+import './Preview.css';
 
-const Preview = ({ streetName, shield, previewId }) => {
-  const containerStyle = {
-    backgroundColor: 'navy',
-    color: 'white',
-    display: 'flex',
-    alignItems: 'center',
-    padding: '10px',
-    marginRight: '10px',
-    maxWidth: 'fit-content',
-    border: '3px solid white', // Borde gordo blanco
-    boxShadow: '0 0 5px navy', // Borde fino azul exterior
-    borderRadius: '10px',
+const Preview = ({ 
+  streetName, 
+  shield, 
+  previewId, 
+  selectedCity = 'madrid', 
+  lineCount = 1,
+  londonPostcode = 'W1U',
+  londonDistrict = 'CITY OF WESTMINSTER'
+}) => {
+  // Return the street name as a single line, regardless of lineCount
+  const getTextLines = () => {
+    if (!streetName) {
+      return ['NOMBRE DE LA CALLE'];
+    }
+    return [streetName];
   };
 
-  const shieldStyle = {
-    marginRight: '10px',
-    width: '50px',
-    transform: 'scale(0.8)',
-  };
+  const textLines = getTextLines();
 
-  const streetNameStyle = {
-    fontSize: '2rem',
-  };
+  // Special case for London street sign
+  if (selectedCity === 'london') {
+    return (
+      <div id={previewId} className={`street-sign ${selectedCity}`}>
+        <div className="london-sign">
+          <div className="street-name">
+            <span className="name">{streetName || 'BAKER STREET'}</span>
+            <span className="postcode">{londonPostcode}</span>
+          </div>
+          <div className="district">{londonDistrict}</div>
+        </div>
+      </div>
+    );
+  }
 
+  // Default rendering for other cities
   return (
-    <div id={previewId} className="preview" style={containerStyle}>
-      <img src={shield} alt="Escudo de la ciudad" style={shieldStyle} />
-      <div style={streetNameStyle}>{streetName}</div>
+    <div id={previewId} className={`street-sign ${selectedCity}`}>
+      <div className={`sign-content ${selectedCity}`}>
+        <img src={shield} alt="Escudo de la ciudad" className="sign-shield" />
+        <div className={`sign-text ${selectedCity} lines-${lineCount}`}>
+          {textLines.map((line, index) => (
+            <div key={index} className="text-line">{line}</div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

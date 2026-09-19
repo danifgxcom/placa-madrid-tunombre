@@ -1,80 +1,53 @@
 import React, { useState } from 'react';
 import html2canvas from 'html2canvas';
+import { getCity } from '../data/cities';
+import { getBorough } from '../data/londonBoroughs';
+import { buildFilename } from '../utils/filename';
 
-const DownloadButton = ({ 
-  previewId, 
-  streetName, 
-  selectedCity = 'madrid',
-  londonPostcode = 'W1U',
-  londonDistrict = 'CITY OF WESTMINSTER'
-}) => {
+const DownloadButton = ({ previewId, lines, selectedCity, extraValues, boroughId }) => {
   const [isDownloading, setIsDownloading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleDownload = () => {
     const previewElement = document.getElementById(previewId);
+    if (!previewElement) {
+      return;
+    }
 
-    if (previewElement) {
-      setIsDownloading(true);
+    setIsDownloading(true);
+    setError(null);
 
-      html2canvas(previewElement, { 
-        scale: 2, // Higher quality
-        backgroundColor: null // Transparent background
-      }).then((canvas) => {
+    html2canvas(previewElement, {
+      scale: 2, // Higher quality
+      backgroundColor: null, // Transparent background
+    })
+      .then((canvas) => {
         const imageUrl = canvas.toDataURL('image/png');
         const link = document.createElement('a');
-
-        // Create a sanitized filename from the street name
-        const sanitizedName = streetName.trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').toLowerCase();
-
-        // Map city IDs to display names for the filename
-        const cityNames = {
-          madrid: 'madrid',
-          london: 'londres',
-          paris: 'paris',
-          barcelona: 'barcelona',
-          rome: 'roma',
-          dublin: 'dublin',
-          berlin: 'berlin',
-          stockholm: 'estocolmo',
-          lisbon: 'lisboa'
-        };
-
-        const cityName = cityNames[selectedCity] || 'madrid';
-
-        let filename;
-        if (selectedCity === 'london') {
-          // For London, include postcode and district in the filename
-          const sanitizedPostcode = londonPostcode.trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').toLowerCase();
-          const sanitizedDistrict = londonDistrict.trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').toLowerCase();
-          filename = sanitizedName 
-            ? `calle-${cityName}-${sanitizedName}-${sanitizedPostcode}-${sanitizedDistrict}.png` 
-            : `calle-${cityName}-${sanitizedPostcode}-${sanitizedDistrict}.png`;
-        } else {
-          // For other cities, use the original filename format
-          filename = sanitizedName ? `calle-${cityName}-${sanitizedName}.png` : `calle-${cityName}.png`;
-        }
-
+        const city = getCity(selectedCity);
+        const extraParts = city.id === 'london' ? [getBorough(boroughId).name] : [];
         link.href = imageUrl;
-        link.download = filename;
+        link.download = buildFilename(city, lines.filter(Boolean).join(' '), extraValues, extraParts);
         link.click();
-
         setIsDownloading(false);
-      }).catch(error => {
-        console.error('Error generating image:', error);
+      })
+      .catch((err) => {
+        console.error('Error generating image:', err);
+        setError('No se pudo generar la imagen. Inténtalo de nuevo.');
         setIsDownloading(false);
       });
-    }
   };
 
   return (
     <div>
-      <button 
-        className="download-button" 
-        onClick={handleDownload} 
+      <button
+        className="bg-brand text-white border-0 rounded-md px-6 py-3 text-base font-bold cursor-pointer transition-all shadow-[0_2px_4px_rgba(0,0,0,0.2)] hover:bg-brand-hover hover:-translate-y-0.5 hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)] active:translate-y-0 active:shadow-[0_2px_4px_rgba(0,0,0,0.2)] disabled:bg-gray-400 disabled:cursor-not-allowed disabled:translate-y-0 disabled:shadow-none"
+        onClick={handleDownload}
         disabled={isDownloading}
       >
         {isDownloading ? 'Generando...' : 'Descargar placa'}
       </button>
+      {error && <p className="text-red-600 mt-2.5 text-sm">{error}</p>}
     </div>
   );
 };

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Simplified, hand-drawn representation matching the pale/muted emblem
+       seen on real signs (cream circle, thin navy outline) - not a
+       reproduction of the official municipal seal -->
+  <circle cx="50" cy="50" r="46" fill="#f3efe4" stroke="#0a2856" stroke-width="3"/>
+  <circle cx="50" cy="50" r="37" fill="none" stroke="#0a2856" stroke-width="1.5"/>
+  <path d="M50 28 L58 46 H42 Z" fill="#0a2856"/>
+  <rect x="44" y="46" width="12" height="22" fill="#0a2856"/>
+  <path d="M38 68 H62 V74 H38 Z" fill="#0a2856"/>
+</svg>

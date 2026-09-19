@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 110" width="100" height="110">
+  <!-- Simplified, hand-drawn representation of the City of London arms (St George's cross + an upright sword in the first quarter) - not a reproduction of the official seal -->
+  <path d="M8 8 H92 V70 C92 90 72 102 50 108 C28 102 8 90 8 70 Z" fill="#ffffff" stroke="#1a1a1a" stroke-width="3"/>
+  <rect x="8" y="8" width="84" height="84" fill="none"/>
+  <!-- St George's cross -->
+  <rect x="40" y="8" width="20" height="100" fill="#cc0000"/>
+  <rect x="8" y="38" width="84" height="20" fill="#cc0000"/>
+  <!-- Upright sword in the first (top-left) quarter -->
+  <g transform="translate(24,20)">
+    <rect x="-2" y="0" width="4" height="16" fill="#cc0000"/>
+    <rect x="-6" y="14" width="12" height="3" fill="#cc0000"/>
+    <path d="M0 -8 L4 0 H-4 Z" fill="#cc0000"/>
+  </g>
+  <path d="M8 8 H92 V70 C92 90 72 102 50 108 C28 102 8 90 8 70 Z" fill="none" stroke="#1a1a1a" stroke-width="3"/>
+</svg>

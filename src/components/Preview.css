@@ -1,7 +1,12 @@
+/* Fonts used across the city-specific sign styles below */
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Cinzel:wght@600;700&family=Archivo+Black&family=Fira+Sans:wght@600;700&family=Cormorant:wght@600;700&family=Playfair+Display:wght@700;800&family=Fjalla+One&family=Bevan&family=UnifrakturCook:wght@700&display=swap');
+
 /* Base styles for all street signs */
 .street-sign {
   display: inline-block;
+  position: relative;
   margin: 0 auto;
+  max-width: 100%;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
 }
 
@@ -19,7 +24,24 @@
   margin-right: 15px;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
   transition: transform 0.3s ease;
-  object-fit: contain; /* Ensure the image maintains its aspect ratio */
+  object-fit: contain;
+}
+
+/* Madrid specific shield styling */
+.sign-content.madrid .sign-shield {
+  width: 60px;
+  height: auto;
+  margin-right: 20px;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3));
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+  padding: 2px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sign-content.valencia .sign-shield {
+  width: 42px;
+  margin-right: 15px;
 }
 
 .sign-shield:hover {
@@ -32,40 +54,86 @@
   word-wrap: break-word;
 }
 
+/* Each line is now literal text the user typed for that exact line (chosen
+   via "Número de líneas" or, for bilingual cities, a dedicated field) rather
+   than a single string auto-wrapped/clamped by the browser. A line that's
+   still too long for the sign truncates with an ellipsis instead of wrapping. */
 .text-line {
   display: block;
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.lines-1 .text-line {
   white-space: nowrap;
 }
 
-.lines-2 .text-line, .lines-3 .text-line {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+.text-line + .text-line {
+  margin-top: 4px;
 }
 
-.lines-2 .text-line {
-  -webkit-line-clamp: 2;
-  max-height: calc(1.3em * 2); /* line-height * number of lines */
+/* Bilingual cities (Dublin, Valencia, Bilbao, Stockholm) use the same
+   two-line mechanism with a slightly larger gap between the two lines. */
+.sign-text.has-secondary .text-line + .text-line {
+  margin-top: 6px;
 }
 
-.lines-3 .text-line {
-  -webkit-line-clamp: 3;
-  max-height: calc(1.2em * 3); /* line-height * number of lines */
+/* Paris' optional arrondissement number: a green domed "fronton" (pediment)
+   merged on top of the sign, matching a real photo (the green isn't a
+   border around the whole plate - it's this cap piece only).
+   .street-sign.has-cartouche reserves the space this needs ABOVE
+   .sign-content, inside the element's own box, instead of letting it
+   overflow above it - html2canvas (used for the PNG download) only
+   captures an element's own box, so anything positioned outside it gets
+   cropped out of the downloaded image even though it renders fine on
+   screen. */
+.street-sign.has-cartouche {
+  padding-top: 22px;
 }
 
-/* Madrid style */
-.sign-content.madrid {
-  background-color: #003399; /* Madrid blue background */
+.arrondissement-cartouche {
+  /* Spans the exact same width as .sign-content.paris below it (both are
+     100% of .street-sign) so the green border and white inline line
+     continue in an unbroken straight line into the rectangle's sides -
+     tapering this to a narrower width (as it briefly was) breaks the
+     border where the two pieces meet. */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 36px;
+  background-color: #16324f;
+  border: 6px solid #1f3d2b;
+  border-bottom: none;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  box-shadow: inset 0 0 0 3px #ffffff;
   color: white;
-  border: 2px solid white;
-  border-radius: 0; /* Madrid signs are rectangular */
-  box-shadow: 0 0 0 1px #003399, 0 0 10px rgba(0, 0, 0, 0.5);
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 3px;
+  z-index: 2;
+  white-space: nowrap;
+  background-repeat: no-repeat;
+  background-image: radial-gradient(circle, #14261a 0 18%, #ffffff 18% 30%, #1f3d2b 30% 68%, #ffffff 68% 80%, transparent 80%);
+  background-position: center -2px;
+  background-size: 16px 16px;
+}
+
+/* Madrid style - Blue enamel with white text - matches the current official
+   aluminium plate design (dark blue background, white text, city shield) */
+.sign-content.madrid {
+  background-color: #00205b;
+  color: white;
+  border: 3px solid white;
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px #00205b, 0 0 15px rgba(0, 0, 0, 0.6);
+  padding: 20px 25px;
+  position: relative;
+  min-width: min(300px, 100%);
+  min-height: 80px;
 }
 
 .sign-content.madrid::before {
@@ -75,230 +143,462 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 50%);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 50%),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.03) 1px, transparent 1px, transparent 4px);
+  border-radius: 5px;
+  pointer-events: none;
+}
+
+.sign-content.madrid::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 60%);
   pointer-events: none;
 }
 
 .sign-text.madrid {
   font-family: 'ChulapaFont', Arial, sans-serif;
-  font-size: 2.2rem;
+  font-size: 2.4rem;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  text-shadow: none; /* No text shadow on Madrid signs */
+  letter-spacing: 1px;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+  margin-left: 5px;
 }
 
-/* London style */
+/* London style - White enamel, black text, red postcode/borough (City of
+   Westminster nameplate: the recognizable standard London style) */
 .london-sign {
-  width: 400px;
+  width: min(400px, 100%);
   background: white;
   border-radius: 8px;
   border: 1px solid black;
   padding: 20px;
-  font-family: 'Gill Sans', sans-serif;
+  font-family: 'Oswald', 'Arial Narrow', sans-serif;
   box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
 }
 
 .street-name {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 10px;
   font-size: 32px;
-  font-weight: bold;
+  font-weight: 600;
   color: black;
+  text-transform: uppercase;
+}
+
+.street-name .name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .postcode {
-  color: #a00;
+  color: #c8102e;
+  flex-shrink: 0;
 }
 
 .district {
   margin-top: 10px;
   font-size: 18px;
-  font-weight: bold;
-  color: #a00;
+  font-weight: 600;
+  color: #c8102e;
   border-top: 2px solid black;
   padding-top: 8px;
   text-transform: uppercase;
 }
 
-/* Paris style */
-.sign-content.paris {
-  background-color: #0046a6; /* Paris blue background */
+/* Royal Borough of Kensington and Chelsea - banner in maroon blackletter on
+   top, serif street name + red postcode below (inverted vs. Westminster) */
+.london-sign.rbkc {
+  background: #f2eee4;
+  font-family: 'Cormorant', 'Times New Roman', serif;
+}
+
+.london-sign.rbkc .district {
+  font-family: 'UnifrakturCook', 'Old English Text MT', serif;
+  color: #7a1620;
+  border-top: none;
+  border-bottom: 2px solid #1a1a1a;
+  margin-top: 0;
+  margin-bottom: 10px;
+  padding-top: 0;
+  padding-bottom: 8px;
+  font-size: 20px;
+  text-transform: none;
+  text-align: center;
+}
+
+.london-sign.rbkc .street-name {
+  color: #1a1a1a;
+  font-weight: 700;
+}
+
+.london-sign.rbkc .postcode {
+  color: #b5222a;
+}
+
+/* City of London - white plaque with a BLACK BADGE around the crest only
+   (confirmed against a real photo: the plate itself is white, not black),
+   black text, a muted brick-red postcode */
+.london-sign.city-of-london {
+  background: #f5f4f0;
+  border: 2px solid #1a1a1a;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Fira Sans', Arial, sans-serif;
+}
+
+.london-sign.city-of-london .borough-crest {
+  width: 28px;
+  height: auto;
+  flex-shrink: 0;
+  background: #000000;
+  padding: 4px;
+  border-radius: 2px;
+}
+
+.london-sign.city-of-london .name {
+  color: #1a1a1a;
+  font-size: 26px;
+  font-weight: 700;
+  text-transform: uppercase;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.london-sign.city-of-london .postcode {
+  color: #a5433a;
+  font-size: 26px;
+  font-weight: 700;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* Lewisham - solid corporate blue, white text throughout (the one borough
+   documented as not using red for the postal district) */
+.london-sign.lewisham {
+  background: #003c82;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-family: 'Oswald', sans-serif;
+}
+
+.london-sign.lewisham .name,
+.london-sign.lewisham .postcode {
   color: white;
-  border: 3px solid white;
-  border-radius: 0; /* Paris signs are rectangular */
-  box-shadow: 0 0 0 1px #0046a6, 0 0 10px rgba(0, 0, 0, 0.5);
+  font-size: 26px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.london-sign.lewisham .name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Bromley - solid corporate green, white text, no postcode on the plate */
+.london-sign.bromley {
+  background: #1b5e20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Oswald', sans-serif;
+}
+
+.london-sign.bromley .name {
+  color: white;
+  font-size: 26px;
+  font-weight: 600;
+  text-transform: uppercase;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Paris style - Deep blue enamel, white text. A close-up real photo
+   confirms the green frame runs continuously around the WHOLE plate (not
+   just the arch on top - it's one continuous outline around the merged
+   arch+rectangle silhouette, same thickness throughout), with a thin white
+   inline border just inside it, and ornate rosette medallions with a bolt
+   head at each corner. */
+.sign-content.paris {
+  background-color: #16324f;
+  color: white;
+  border: 6px solid #1f3d2b;
+  border-radius: 0;
+  box-shadow: inset 0 0 0 3px #ffffff, 0 0 15px rgba(0, 0, 0, 0.4);
+  position: relative;
+  padding: 22px 28px;
+  background-repeat: no-repeat;
+  background-image:
+    radial-gradient(circle, #14261a 0 18%, #ffffff 18% 30%, #1f3d2b 30% 68%, #ffffff 68% 80%, transparent 80%),
+    radial-gradient(circle, #14261a 0 18%, #ffffff 18% 30%, #1f3d2b 30% 68%, #ffffff 68% 80%, transparent 80%),
+    radial-gradient(circle, #14261a 0 18%, #ffffff 18% 30%, #1f3d2b 30% 68%, #ffffff 68% 80%, transparent 80%),
+    radial-gradient(circle, #14261a 0 18%, #ffffff 18% 30%, #1f3d2b 30% 68%, #ffffff 68% 80%, transparent 80%);
+  background-position:
+    12px 12px,
+    calc(100% - 12px) 12px,
+    12px calc(100% - 12px),
+    calc(100% - 12px) calc(100% - 12px);
+  background-size: 20px 20px, 20px 20px, 20px 20px, 20px 20px;
 }
 
 .sign-text.paris {
-  font-family: 'Arial', sans-serif;
-  font-size: 2.2rem;
-  font-weight: bold;
+  font-family: 'Oswald', sans-serif;
+  font-size: 2.0rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
 }
 
-/* Barcelona style */
+/* Barcelona style - White marble slab, black engraved UPPERCASE text (a real
+   photo confirms caps, not the lowercase toponymy-document convention),
+   bolted to the wall with 4 visible corner screws, no coat of arms */
 .sign-content.barcelona {
-  background-color: #00529b; /* Barcelona blue background */
-  color: white;
-  border: 2px solid white;
-  border-radius: 0; /* Barcelona signs are rectangular */
-  box-shadow: 0 0 0 1px #00529b, 0 0 10px rgba(0, 0, 0, 0.5);
+  background-color: #f7f5f0;
+  color: #1a1a1a;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -3px 8px rgba(0, 0, 0, 0.08),
+    inset 0 0 40px rgba(0, 0, 0, 0.05),
+    0 3px 10px rgba(0, 0, 0, 0.4);
   position: relative;
+  padding: 22px 30px;
+  background-repeat: no-repeat;
+  background-image:
+    radial-gradient(circle, #2b2b2b 42%, rgba(43, 43, 43, 0.35) 55%, transparent 65%),
+    radial-gradient(circle, #2b2b2b 42%, rgba(43, 43, 43, 0.35) 55%, transparent 65%),
+    radial-gradient(circle, #2b2b2b 42%, rgba(43, 43, 43, 0.35) 55%, transparent 65%),
+    radial-gradient(circle, #2b2b2b 42%, rgba(43, 43, 43, 0.35) 55%, transparent 65%),
+    linear-gradient(120deg, transparent 42%, rgba(120, 110, 95, 0.06) 50%, transparent 58%),
+    linear-gradient(35deg, transparent 60%, rgba(120, 110, 95, 0.04) 68%, transparent 76%),
+    radial-gradient(circle at 25% 30%, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    radial-gradient(circle at 70% 65%, rgba(0, 0, 0, 0.035) 1px, transparent 1px);
+  background-position:
+    14px 14px,
+    calc(100% - 14px) 14px,
+    14px calc(100% - 14px),
+    calc(100% - 14px) calc(100% - 14px),
+    0 0, 0 0, 0 0, 0 0;
+  background-size: 9px 9px, 9px 9px, 9px 9px, 9px 9px, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
 }
 
 .sign-text.barcelona {
   font-family: 'Arial', sans-serif;
   font-size: 2.2rem;
-  font-weight: bold;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-/* Rome style */
+/* Rome style - Pale travertine stone with black engraved capitals */
 .sign-content.rome {
-  background-color: #003399; /* Rome blue background */
-  color: white;
-  border: 2px solid white;
-  border-radius: 0; /* Rome signs are rectangular */
-  box-shadow: 0 0 0 1px #003399, 0 0 10px rgba(0, 0, 0, 0.5);
+  background-color: #f2ede3;
+  color: #1a1a1a;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 0;
+  box-shadow: inset 0 0 25px rgba(120, 100, 80, 0.1), 0 2px 6px rgba(0, 0, 0, 0.35);
   position: relative;
-}
-
-.sign-content.rome::before {
-  content: 'S.P.Q.R.';
-  position: absolute;
-  top: 5px;
-  right: 10px;
-  font-size: 0.8rem;
-  font-weight: bold;
-  opacity: 0.8;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(120, 100, 80, 0.18) 1px, transparent 1px),
+    radial-gradient(circle at 80% 70%, rgba(120, 100, 80, 0.12) 1px, transparent 1px);
 }
 
 .sign-text.rome {
-  font-family: 'Times New Roman', serif;
-  font-size: 2.2rem;
-  font-weight: bold;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 2.0rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 2px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
-/* Dublin style */
+/* Dublin style - Blue and white, genuinely bilingual (Irish + English),
+   both lines equally prominent per Dublin City Council's current standard */
 .sign-content.dublin {
-  background-color: #169b62; /* Dublin green background */
+  background-color: #00509e;
   color: white;
   border: 2px solid white;
-  border-radius: 0; /* Dublin signs are rectangular */
-  box-shadow: 0 0 0 1px #169b62, 0 0 10px rgba(0, 0, 0, 0.5);
+  border-radius: 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   position: relative;
-}
-
-.sign-content.dublin::after {
-  content: '';
-  position: absolute;
-  bottom: 5px;
-  right: 10px;
-  font-size: 0.8rem;
-  font-style: italic;
-  opacity: 0.8;
 }
 
 .sign-text.dublin {
-  font-family: 'Arial', sans-serif;
-  font-size: 2.2rem;
-  font-weight: bold;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1.3;
+}
+
+/* Berlin style - Plain white enamel, black geometric sans-serif capitals.
+   No blackletter/Fraktur, no corner rivets, no rounded corners - none of
+   that is part of the real Berlin street sign standard. */
+.sign-content.berlin {
+  background-color: #ffffff;
+  color: #000000;
+  border: 2px solid #000000;
+  border-radius: 0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  position: relative;
+}
+
+.sign-text.berlin {
+  font-family: 'Fira Sans', Arial, sans-serif;
+  font-size: 2.0rem;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0.5px;
+}
+
+/* Stockholm style - Blue with white text, condensed geometric sans,
+   optional smaller second row (kvarter/district) under a divider rule */
+.sign-content.stockholm {
+  background-color: #005293;
+  color: white;
+  border: 1px solid white;
+  border-radius: 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.sign-text.stockholm {
+  font-family: 'Oswald', sans-serif;
+  font-size: 2.1rem;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-/* Berlin style */
-.sign-content.berlin {
-  background-color: #0076c0; /* Berlin blue background */
+.sign-text.stockholm.has-secondary .text-line:last-child {
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+  margin-top: 8px !important;
+  padding-top: 6px;
+  opacity: 0.9;
+}
+
+/* Lisbon style - matches a real azulejo tile sign (Rua Cascais): a visible
+   grid of individual cream tiles, a blue frame, and blue corner flourishes
+   evoking the painted floral/rope border real panels have - not the busy
+   diagonal checkerboard or the thin ribbon this used to have */
+.sign-content.lisbon {
+  background-color: #f2ecd9;
+  color: #1e3a6e;
+  border: 3px solid #1e3a6e;
+  border-radius: 2px;
+  box-shadow: 0 0 0 4px #f2ecd9, 0 0 0 6px #1e3a6e, 0 3px 10px rgba(0, 0, 0, 0.35);
+  position: relative;
+  padding: 22px 30px;
+  background-repeat: repeat, repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+  background-image:
+    repeating-linear-gradient(to right, rgba(30, 58, 110, 0.22) 0, rgba(30, 58, 110, 0.22) 1.5px, transparent 1.5px, transparent 30px),
+    repeating-linear-gradient(to bottom, rgba(30, 58, 110, 0.22) 0, rgba(30, 58, 110, 0.22) 1.5px, transparent 1.5px, transparent 30px),
+    radial-gradient(circle, #1e3a6e 42%, transparent 46%),
+    radial-gradient(circle, #1e3a6e 42%, transparent 46%),
+    radial-gradient(circle, #1e3a6e 42%, transparent 46%),
+    radial-gradient(circle, #1e3a6e 42%, transparent 46%);
+  background-position:
+    0 0,
+    0 0,
+    12px 12px,
+    calc(100% - 12px) 12px,
+    12px calc(100% - 12px),
+    calc(100% - 12px) calc(100% - 12px);
+  background-size: auto, auto, 9px 9px, 9px 9px, 9px 9px, 9px 9px;
+}
+
+.sign-text.lisbon {
+  font-family: 'Playfair Display', 'Times New Roman', serif;
+  font-size: 2.1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Valencia style - Dark navy plate with a white rounded-corner border and a
+   small pale emblem, matching a real photo (Carrer de les Avellanes) */
+.sign-content.valencia {
+  background-color: #0a2856;
   color: white;
-  border: 2px solid white;
-  border-radius: 0; /* Berlin signs are rectangular */
-  box-shadow: 0 0 0 1px #0076c0, 0 0 10px rgba(0, 0, 0, 0.5);
+  border: 3px solid white;
+  border-radius: 14px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
   position: relative;
 }
 
-.sign-content.berlin::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 50%);
-  pointer-events: none;
-}
-
-.sign-text.berlin {
-  font-family: 'Arial', sans-serif;
-  font-size: 2.2rem;
-  font-weight: bold;
+.sign-text.valencia {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
-/* Stockholm style */
-.sign-content.stockholm {
-  background-color: #006aa7; /* Stockholm blue background (Swedish blue) */
-  color: white;
-  border: 3px solid #ffcc00; /* Swedish yellow */
-  border-radius: 0; /* Stockholm signs are rectangular */
-  box-shadow: 0 0 0 1px #006aa7, 0 0 10px rgba(0, 0, 0, 0.5);
+/* Sevilla style - White ceramic azulejo tile, ornamental decorative
+   lettering, thin green/yellow "orla" border */
+.sign-content.sevilla {
+  background-color: #fdfdfb;
+  color: #111111;
+  border: 3px solid #2f7d4f;
+  border-radius: 2px;
+  box-shadow:
+    0 0 0 3px #f2c94c,
+    0 0 0 6px #2f7d4f,
+    0 3px 10px rgba(0, 0, 0, 0.35);
   position: relative;
+  padding: 20px 26px;
 }
 
-.sign-content.stockholm::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 50%);
-  pointer-events: none;
-}
-
-.sign-text.stockholm {
-  font-family: 'Arial', sans-serif;
-  font-size: 2.2rem;
-  font-weight: bold;
+.sign-text.sevilla {
+  font-family: 'Bevan', 'Georgia', serif;
+  font-size: 1.9rem;
+  font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-/* Lisbon style */
-.sign-content.lisbon {
-  background-color: #0c2577; /* Lisbon blue background */
-  color: white;
-  border: 2px solid white;
-  border-radius: 0; /* Lisbon signs are rectangular */
-  box-shadow: 0 0 0 1px #0c2577, 0 0 10px rgba(0, 0, 0, 0.5);
+/* Bilbao style - White/cream ceramic tile, blue border and bold caps,
+   bilingual (Basque + Spanish) */
+.sign-content.bilbao {
+  background-color: #fdfdf8;
+  color: #003399;
+  border: 3px solid #003399;
+  border-radius: 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   position: relative;
 }
 
-.sign-content.lisbon::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 50%);
-  pointer-events: none;
-}
-
-.sign-text.lisbon {
-  font-family: 'Arial', sans-serif;
-  font-size: 2.2rem;
-  font-weight: bold;
+.sign-text.bilbao {
+  font-family: 'Fjalla One', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-/* Multi-line text adjustments */
+/* Multi-line text adjustments (single-line-wrap cities only) */
 .sign-text.lines-2 {
   font-size: 1.8rem;
   line-height: 1.3;
@@ -329,5 +629,25 @@
 
   .sign-text.lines-3 {
     font-size: 1.2rem;
+  }
+
+  .london-sign {
+    padding: 14px;
+  }
+
+  .street-name {
+    font-size: 24px;
+  }
+
+  .district {
+    font-size: 15px;
+  }
+
+  .london-sign.city-of-london .name,
+  .london-sign.city-of-london .postcode,
+  .london-sign.lewisham .name,
+  .london-sign.lewisham .postcode,
+  .london-sign.bromley .name {
+    font-size: 20px;
   }
 }
